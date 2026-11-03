@@ -92,7 +92,8 @@ flowchart LR
   DO --> PLT
   CON --> APP & ITC & PRV
   SYS --> APP & ITC & INI
-  classDef a fill:#387BDE,color:#000; classDef b fill:#003399,color:#fff;
+  classDef a fill:#387BDE,color:#000;
+  classDef b fill:#003399,color:#fff;
   classDef s fill:#027446,color:#fff;
 ```
 
