@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "LeanIX — guarda do fechamento de relações (Provider)",
+      "trigger": "PostFileSave",
+      "description": "Após salvar um leanix-*.md / fichas-leanix.md em documentos-gerados/, cruza os provedores citados em leanix-itcomponents.md (relITComponentToProvider, obrigatória) com as fichas em leanix-providers.md e avisa se houver Provider sem ficha. Reforça o passo 6 (fechamento de relações) da steering fichas-leanix-completas. Node cross-platform; nunca bloqueia.",
+      "matcher": "documentos-gerados.*leanix.*\\.md$|documentos-gerados.*fichas-leanix\\.md$",
+      "action": {
+        "type": "command",
+        "command": "node .kiro/hooks/leanix-fechamento-relacoes-check.js",
+        "timeout": 20
+      }
+    }
+  ]
+}

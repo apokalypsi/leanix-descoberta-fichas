@@ -1,0 +1,100 @@
+openapi: 3.0.3
+info:
+  title: produto-service API
+  version: 1.0.0
+  description: CRUD de Produto com idempotencia (Idempotency-Key) e enriquecimento de endereco via ViaCEP
+  contact:
+    name: Time de Catalogo
+servers:
+  - url: http://localhost:8080
+    description: Local
+security:
+  - oauth2: []
+paths:
+  /api/v1/produtos:
+    post:
+      summary: Cria um produto (idempotente via header Idempotency-Key)
+      operationId: criarProduto
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProdutoRequest'
+      responses:
+        '201': { description: Criado }
+        '200': { description: Repeticao idempotente — estado atual }
+        '409': { description: SKU duplicado }
+    get:
+      summary: Lista produtos
+      operationId: listarProdutos
+      responses:
+        '200': { description: Lista de produtos }
+  /api/v1/produtos/{id}:
+    get:
+      summary: Busca produto por id
+      operationId: buscarProduto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200': { description: Produto }
+        '404': { description: Nao encontrado }
+    put:
+      summary: Atualiza produto
+      operationId: atualizarProduto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProdutoRequest'
+      responses:
+        '200': { description: Atualizado }
+        '404': { description: Nao encontrado }
+    delete:
+      summary: Remove produto
+      operationId: removerProduto
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '204': { description: Removido }
+        '404': { description: Nao encontrado }
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: OAuth2 — token JWT Bearer validado por Resource Server
+      flows:
+        clientCredentials:
+          tokenUrl: https://auth.exemplo.com/realms/catalogo/protocol/openid-connect/token
+          scopes:
+            produtos:read: Ler produtos
+            produtos:write: Criar/atualizar/remover produtos
+  schemas:
+    ProdutoRequest:
+      type: object
+      required: [sku, nome, preco, quantidadeEstoque]
+      properties:
+        sku: { type: string, maxLength: 40 }
+        nome: { type: string, maxLength: 160 }
+        descricao: { type: string, maxLength: 1000 }
+        preco: { type: number, format: double, exclusiveMinimum: true, minimum: 0 }
+        quantidadeEstoque: { type: integer, minimum: 0 }
+        cepOrigem: { type: string, pattern: '^\d{8}$' }

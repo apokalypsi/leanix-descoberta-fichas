@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "LeanIX — guarda da completude das fichas",
+      "trigger": "PreToolUse",
+      "description": "Antes de gravar um entregável de ficha LeanIX (leanix-*.md ou fichas-leanix.md em documentos-gerados/), verifica se o conteúdo resume fichas com frases proibidas pela steering fichas-leanix-completas (\"demais seguem o mesmo padrão\", \"representativa\", reticências de omissão). Se achar, devolve uma decisão \"ask\" para confirmar antes de gravar. Detecção via Node cross-platform em leanix-completude-check.js. Nunca bloqueia por erro.",
+      "matcher": "fs_write|str_replace|fs_append",
+      "action": {
+        "type": "command",
+        "command": "node .kiro/hooks/leanix-completude-check.js",
+        "timeout": 20
+      }
+    }
+  ]
+}

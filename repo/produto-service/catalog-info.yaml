@@ -1,0 +1,45 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: produto-service
+  description: CRUD de Produto com consumo de evento Kafka, cache/idempotencia Redis e integracao ViaCEP
+  labels:
+    environment: production
+    language: java
+    framework: spring-boot
+    cloud: aws
+  tags:
+    - java
+    - spring-boot
+    - kafka
+    - redis
+    - postgresql
+  annotations:
+    github.com/project-slug: exemplo/produto-service
+  links:
+    - url: https://github.com/exemplo/produto-service
+      title: GitHub Repository
+      icon: github
+spec:
+  type: service
+  lifecycle: production
+  owner: "group:default/squad-catalogo"
+  system: "system:default/catalogo-produtos"
+  providesApis:
+    - produto-service-api
+  consumesApis:
+    - viacep-api
+
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: produto-service-api
+  description: API REST de CRUD de produtos
+spec:
+  type: openapi
+  lifecycle: production
+  owner: "group:default/squad-catalogo"
+  system: "system:default/catalogo-produtos"
+  definition:
+    $text: ./openapi.yaml

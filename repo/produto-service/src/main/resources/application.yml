@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: produto-service
+
+  datasource:
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/produtos}
+    username: ${POSTGRES_USER:produtos}
+    password: ${POSTGRES_PASSWORD:produtos}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate.jdbc.time_zone: UTC
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: produto-service
+
+  # Seguranca OAuth2 Resource Server — valida o JWT (Bearer) pelo issuer.
+  # O issuer-uri publica o JWK Set usado para verificar a assinatura do token.
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${OAUTH2_ISSUER_URI:https://auth.exemplo.com/realms/catalogo}
+
+# Topicos Kafka consumidos
+kafka:
+  topicos:
+    estoque-movimentos: estoque.movimentos
+
+# Integracao externa — ViaCEP (API publica de consulta de CEP)
+integracoes:
+  viacep:
+    base-url: https://viacep.com.br
+    connect-timeout-ms: 2000
+    read-timeout-ms: 3000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+server:
+  port: ${SERVER_PORT:8080}
