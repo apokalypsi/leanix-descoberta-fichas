@@ -1,0 +1,34 @@
+# === Segredos / credenciais (NUNCA versionar) ===
+# O token do LeanIX e afins vêm de variável de ambiente; se por engano
+# forem colados num arquivo local, estes padrões evitam o commit.
+.env
+.env.*
+!.env.example
+*.local
+secrets.*
+*.secret
+.kiro/settings/mcp.local.json
+
+# === Material de trabalho / saída do agente ===
+# As fichas geradas são entregáveis de trabalho, não parte do template.
+# (O exemplo documentos-gerados/produto-service/ é versionado de propósito como demo;
+#  num projeto derivado, descomente a linha abaixo para ignorar toda a saída.)
+# documentos-gerados/
+
+# === Sistema operacional ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Editores / IDEs ===
+.idea/
+*.swp
+*.swo
+*~
+.vscode/*
+!.vscode/extensions.json
+
+# === Node (hooks usam Node; evita subir dependências se alguém instalar algo) ===
+node_modules/
+npm-debug.log*
+yarn-error.log*
